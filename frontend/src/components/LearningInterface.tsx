@@ -102,9 +102,14 @@ const LearningInterface: React.FC<LearningInterfaceProps> = ({ onBack }) => {
       );
 
       setData(response.data);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching prerequisites:', error);
-      alert('Failed to fetch prerequisites. Please try again.');
+      const errorMessage = error.response?.data?.message || 
+                          error.response?.data?.error || 
+                          error.response?.data?.details ||
+                          error.message || 
+                          'Failed to fetch prerequisites. Please try again.';
+      alert(errorMessage);
     } finally {
       setLoading(false);
     }

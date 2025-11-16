@@ -33,7 +33,18 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const prereqs = await generatePrerequisites(topic);
+    let prereqs: string[];
+    try {
+      prereqs = await generatePrerequisites(topic);
+    } catch (err: any) {
+      console.error('Error in generatePrerequisites:', err);
+      res.status(500).json({ 
+        error: 'Error generating prerequisites', 
+        details: err.message || 'Unknown error',
+        message: err.message || 'Failed to generate prerequisites. Please check your API configuration.'
+      });
+      return;
+    }
     
     // Save to global prerequisites collection
     const newEntry = new Prereq({ topic, prerequisites: prereqs });
@@ -47,12 +58,21 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
     }
     
     // Add topic to user's topics if not already present
-    if (!user.topics.includes(topic)) {
+    // Use Mongoose array methods directly - arrays are always initialized
+    if (!user.topics || user.topics.length === 0 || !user.topics.includes(topic)) {
+      if (!user.topics || user.topics.length === 0) {
+        (user as any).topics = [];
+      }
       user.topics.push(topic);
     }
     
     // Update or add prerequisites for this topic
-    const existingPrereqIndex = user.prerequisites.findIndex(p => p.topic === topic);
+    // Use Mongoose array methods directly - arrays are always initialized
+    if (!user.prerequisites || user.prerequisites.length === 0) {
+      (user as any).prerequisites = [];
+    }
+    
+    const existingPrereqIndex = user.prerequisites.findIndex(p => p && p.topic === topic);
     if (existingPrereqIndex >= 0) {
       user.prerequisites[existingPrereqIndex].prerequisites = prereqs;
     } else {
@@ -64,7 +84,13 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
     res.json({ topic, prerequisites: prereqs });
   } catch (err: any) {
     console.error('Error generating prerequisites:', err);
-    res.status(500).json({ error: 'Error generating prerequisites', details: err.message });
+    const errorMessage = err.message || 'Unknown error occurred';
+    const errorDetails = err.response?.data || errorMessage;
+    res.status(500).json({ 
+      error: 'Error generating prerequisites', 
+      details: errorDetails,
+      message: errorMessage
+    });
   }
 });
 

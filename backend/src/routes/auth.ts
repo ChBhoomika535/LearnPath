@@ -2,11 +2,9 @@ import express, { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/User';
-import { requireRole, authenticate } from '../middleware/auth';
+import { requireRole, authenticate, JWT_SECRET } from '../middleware/auth';
 
 const router = express.Router();
-const JWT_SECRET = process.env.JWT_SECRET || 'changeme';
-
 // Register
 router.post('/register', async (req: Request, res: Response): Promise<void> => {
   const { username, email, password } = req.body;

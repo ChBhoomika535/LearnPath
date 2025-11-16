@@ -11,7 +11,7 @@ declare global {
   }
 }
 
-const JWT_SECRET = process.env.JWT_SECRET || 'changeme';
+export const JWT_SECRET = process.env.JWT_SECRET || 'changeme';
 
 export function authenticate(req: Request, res: Response, next: NextFunction): void {
   const authHeader = req.headers.authorization;

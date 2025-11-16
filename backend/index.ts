@@ -14,12 +14,16 @@ import learningPath from './src/routes/learningPath';
 import authRoutes from './src/routes/auth';
 import notificationRoutes from './src/routes/notifications';
 import chatRoutes from './src/routes/chat';
-import { authenticate } from './src/middleware/auth';
+import { authenticate, JWT_SECRET } from './src/middleware/auth';
 import Notification from './src/models/Notification';
 import Chat from './src/models/Chat';
 
 // Load environment variables from .env file
-dotenv.config();
+// Try multiple paths to ensure we find the .env file
+const envPath = path.resolve(process.cwd(), '.env');
+dotenv.config({ path: envPath });
+console.log('📁 Loading .env from:', envPath);
+console.log('🔑 OPENROUTER_API_KEY loaded:', process.env.OPENROUTER_API_KEY ? 'Yes (hidden)' : 'No');
 
 const app = express();
 const server = createServer(app);
@@ -84,10 +88,11 @@ io.use((socket: Socket, next: (err?: Error) => void) => {
   if (!token) return next(new Error('Authentication error'));
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key') as any;
+    const decoded = jwt.verify(token, JWT_SECRET) as any;
     (socket as any).data = { user: decoded };
     next();
-  } catch {
+  } catch (err) {
+    console.error('Socket.IO authentication error:', err);
     next(new Error('Authentication error'));
   }
 });

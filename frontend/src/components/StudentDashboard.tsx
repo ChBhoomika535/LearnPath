@@ -211,20 +211,23 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({ user, onLogout, onS
     if (topicName.trim()) {
       setLoading(true);
       try {
-        const response = await axios.post(`${API_BASE_URL}/api/prerequisites`, {
+        const response = await axios.post(API_ENDPOINTS.PREREQUISITES, {
           topic: topicName
-        }, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'application/json'
-          }
         });
 
         console.log('Prerequisites response:', response.data);
         setData(response.data);
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error fetching prerequisites:', error);
-        alert('Failed to fetch prerequisites. Please try again.');
+        if (error.response?.status === 401) {
+          alert('Authentication error. Please log in again.');
+        } else if (error.response?.status === 400) {
+          alert(error.response?.data?.error || 'Invalid request. Please check your input.');
+        } else if (error.response?.data?.error) {
+          alert(`Error: ${error.response.data.error}`);
+        } else {
+          alert('Failed to fetch prerequisites. Please try again.');
+        }
       } finally {
         setLoading(false);
       }
