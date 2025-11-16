@@ -13,6 +13,7 @@ import LearningInterfaceComponent from './components/LearningInterface';
 import { WebSocketProvider, useWebSocket } from './contexts/WebSocketContext';
 // import { API_ENDPOINTS, API_BASE_URL } from './config/api'; // Unused import
 import GlobalStyles from './components/GlobalStyles';
+import RainbowCursorTrail from './components/RainbowCursorTrail';
 
 
 // Type definitions (unused - commented out)
@@ -153,6 +154,7 @@ function AuthWrapper() {
             <Navigate to="/auth" replace />
           )
         } />
+        
 
         {/* Student dashboard routes */}
         <Route path="/student/*" element={
@@ -165,7 +167,9 @@ function AuthWrapper() {
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
+        
       </Routes>
+    
     </>
   );
 }
@@ -531,6 +535,7 @@ function LearningInterface({ user, onBack }: { user: User; onBack: () => void })
 function App() {
   return (
     <WebSocketProvider>
+      <RainbowCursorTrail/>
       <AuthWrapper />
     </WebSocketProvider>
   );

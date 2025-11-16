@@ -1,4 +1,5 @@
 import React from 'react';
+import ContactForm from './ContactForm';
 
 interface FAQSectionProps {
   isDarkMode?: boolean;
@@ -211,6 +212,8 @@ const FAQSection: React.FC<FAQSectionProps> = ({ isDarkMode = false }) => {
           }
         }
       `}</style>
+          <ContactForm/>
+
     </section>
   );
 };

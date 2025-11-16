@@ -4,7 +4,7 @@
   "description": "Express + TypeScript + Socket.IO backend",
   "main": "dist/index.js",
   "scripts": {
-     "dev": "concurrently \"ts-node-dev index.ts\" \"cd ../frontend && npm run dev\"",
+    "dev": "concurrently \"ts-node-dev index.ts\" \"cd ../frontend && npm run dev\"",
     "clean": "rimraf dist",
     "prebuild": "npm run clean",
     "build": "tsc",
@@ -31,11 +31,11 @@
     "mongoose": "^8.15.1",
     "rimraf": "^5.0.5",
     "socket.io": "^4.7.2",
-    "uuid": "^11.1.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
-    "concurrently": "^9.2.0",
+    "concurrently": "^9.2.1",
     "ts-node-dev": "^2.0.0"
   },
   "engines": {
