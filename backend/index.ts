@@ -26,11 +26,9 @@ const server = createServer(app);
 
 // CORS configuration for production and development
 const allowedOrigins = [
-
   'http://localhost:3000',
   'http://localhost:5173',
   'https://ssmp.onrender.com',
-
 ];
 
 const io = new Server(server, {
@@ -41,7 +39,6 @@ const io = new Server(server, {
   }
 });
 
-// Middleware
 app.use(cors({
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl requests)
@@ -54,8 +51,11 @@ app.use(cors({
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true,
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
+
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
@@ -79,7 +79,7 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/chat', chatRoutes);
 
 // WebSocket authentication
-io.use((socket: Socket, next) => {
+io.use((socket: Socket, next: (err?: Error) => void) => {
   const token = socket.handshake.auth.token;
   if (!token) return next(new Error('Authentication error'));
 
@@ -182,7 +182,7 @@ io.on('connection', (socket: Socket) => {
 });
 
 // MongoDB connection with better error handling
-const mongoUri = process.env.MONGO_URI || 'mongodb+srv://dsivasai05:csk@cluster0.nmjhsng.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+const mongoUri = process.env.MONGO_URI || 'mongodb+srv://Bhoomika:y22cs028@cluster0.gqljvzz.mongodb.net/?appName=Cluster0';
 const port = process.env.PORT || 5000;
 
 // Improved MongoDB connection with retry logic
