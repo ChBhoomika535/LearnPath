@@ -9,6 +9,7 @@ import TestimonialsSection from './TestimonialsSection';
 import FAQSection from './FAQSection';
 import CallToActionSection from './CallToActionSection';
 import Footer from './Footer';
+import Chatbot from './Chatbot';
 
 interface LandingPageProps {
   onStartLearning: () => void;
@@ -77,6 +78,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartLearning, onAuthClick 
         <FAQSection isDarkMode={isDarkMode} />
         <CallToActionSection onStartLearning={onStartLearning} isDarkMode={isDarkMode} />
         <Footer isDarkMode={isDarkMode} />
+        <Chatbot/>
       </div>
     </>
   );
